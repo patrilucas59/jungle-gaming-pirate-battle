@@ -1,5 +1,5 @@
-function App() {
-  return <main className="app"/>
-}
+import { GameView } from "./ui/GameView";
 
-export default App
+export default function App() {
+  return <GameView />;
+}
