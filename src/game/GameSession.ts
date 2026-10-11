@@ -1,3 +1,4 @@
+import { IslandView } from './../render/IslandView';
 import type { Application, Container, Ticker } from "pixi.js";
 import { FixedStepLoop } from "./FixedStepLoop";
 import { SIMULATION } from "../config/simulation";
@@ -9,6 +10,7 @@ import type { GameTextures } from "../render/textures";
 import { SHIP_SPRITE_ROTATION_OFFSET } from "../render/orientation";
 import { GAMEPLAY } from "../config/gameplay";
 import { updatePlayerMovement } from "../sim/playerMovement";
+import { ISLANDS } from '../config/arena';
 
 export class GameSession {
   private readonly app: Application;
@@ -17,9 +19,13 @@ export class GameSession {
   private readonly state: WorldState = createWorld();
   private readonly playerView: ShipView;
   private activeSeconds = 0;
+  private readonly islandViews: IslandView[];
 
   constructor(app: Application, layer: Container, textures: GameTextures) {
     this.app = app;
+    this.islandViews = ISLANDS.map(
+    (island) => new IslandView(layer, textures, island),
+    );
     this.playerView = new ShipView(
       layer,
       textures.playerShip,
@@ -43,6 +49,7 @@ export class GameSession {
     this.app.ticker.remove(this.onTick);
     this.keyboard.detach();
     this.playerView.destroy();
+    for (const view of this.islandViews) view.destroy();
   }
 
   private readonly onTick = (ticker: Ticker): void => {
