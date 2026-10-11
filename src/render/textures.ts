@@ -14,6 +14,7 @@ export const TEXTURE_PATHS = {
   islandBottomLeft: `${TEXTURE_ROOT}/tiles/tile_33.png`,
   islandBottom: `${TEXTURE_ROOT}/tiles/tile_34.png`,
   islandBottomRight: `${TEXTURE_ROOT}/tiles/tile_35.png`,
+  cannonBall: `${TEXTURE_ROOT}/ship_parts/cannon_ball.png`,
 } as const satisfies Record<string, string>;
 
 export type TextureKey = keyof typeof TEXTURE_PATHS;

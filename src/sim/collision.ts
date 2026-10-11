@@ -48,3 +48,16 @@ export function pushCircleOutOfRect(
   else body.y = rect.y + rect.height + radius;
   return true;
 }
+
+export function circleIntersectsRect(
+  x: number,
+  y: number,
+  radius: number,
+  rect: Rect,
+): boolean {
+  const closestX = clamp(x, rect.x, rect.x + rect.width);
+  const closestY = clamp(y, rect.y, rect.y + rect.height);
+  const dx = x - closestX;
+  const dy = y - closestY;
+  return dx * dx + dy * dy < radius * radius;
+}

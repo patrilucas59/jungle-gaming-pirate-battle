@@ -37,7 +37,7 @@ export function GameView() {
     <div className="game-view">
       {load.phase === 'loading' && (
         <div className="game-view__overlay">
-          <p role="status">Loading assets...</p>
+          <p role="status">Loading...</p>
           <progress 
             max={1}
             value={load.progress}

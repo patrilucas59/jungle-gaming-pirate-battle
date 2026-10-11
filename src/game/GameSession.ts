@@ -1,3 +1,4 @@
+import { ProjectileLayer } from './../render/ProjectileLayer';
 import { IslandView } from './../render/IslandView';
 import type { Application, Container, Ticker } from "pixi.js";
 import { FixedStepLoop } from "./FixedStepLoop";
@@ -20,6 +21,7 @@ export class GameSession {
   private readonly playerView: ShipView;
   private activeSeconds = 0;
   private readonly islandViews: IslandView[];
+  private readonly projectileLayer: ProjectileLayer;
 
   constructor(app: Application, layer: Container, textures: GameTextures) {
     this.app = app;
@@ -32,6 +34,7 @@ export class GameSession {
       SHIP_SPRITE_ROTATION_OFFSET,
     );
     this.playerView.sync(this.state.player);
+    this.projectileLayer = new ProjectileLayer(layer, textures.cannonBall);
     this.loop = new FixedStepLoop({
       stepSeconds: SIMULATION.stepSeconds,
       maxFrameSeconds: SIMULATION.maxFrameSeconds,
@@ -49,12 +52,14 @@ export class GameSession {
     this.app.ticker.remove(this.onTick);
     this.keyboard.detach();
     this.playerView.destroy();
+    this.projectileLayer.destroy();
     for (const view of this.islandViews) view.destroy();
   }
 
   private readonly onTick = (ticker: Ticker): void => {
     this.loop.advance(ticker.elapsedMS / 1000);
     this.playerView.sync(this.state.player);
+    this.projectileLayer.sync(this.state.projectiles);
   };
 
   private update(dt: number): void {
