@@ -1,3 +1,4 @@
+import type { Rect } from '../config/arena';
 export interface ShipState {
   x: number;
   y: number;
@@ -6,4 +7,5 @@ export interface ShipState {
 
 export interface WorldState {
   player: ShipState;
+  obstacles: readonly Rect[];
 }

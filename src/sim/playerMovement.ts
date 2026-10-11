@@ -1,6 +1,7 @@
 import { ARENA } from "../config/arena";
 import type { PlayerConfig } from "../config/gameplay";
 import type { PlayerIntents } from "../input/intents";
+import { clamp } from "./math";
 import type { ShipState } from "./types";
 
 export function updatePlayerMovement(
@@ -22,8 +23,4 @@ export function updatePlayerMovement(
 
   ship.x = clamp(ship.x, config.radius, ARENA.width - config.radius);
   ship.y = clamp(ship.y, config.radius, ARENA.height - config.radius);
-}
-
-function clamp(value: number, min: number, max: number): number {
-  return Math.min(Math.max(value, min), max);
 }

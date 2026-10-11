@@ -9,7 +9,7 @@ import { ShipView } from "../render/ShipView";
 import type { GameTextures } from "../render/textures";
 import { SHIP_SPRITE_ROTATION_OFFSET } from "../render/orientation";
 import { GAMEPLAY } from "../config/gameplay";
-import { updatePlayerMovement } from "../sim/playerMovement";
+import { stepWorld  } from "../sim/stepWorld";
 import { ISLANDS } from '../config/arena';
 
 export class GameSession {
@@ -59,7 +59,7 @@ export class GameSession {
 
   private update(dt: number): void {
     const intents = this.keyboard.read();
-    updatePlayerMovement(this.state.player, intents, dt, GAMEPLAY.player);
+    stepWorld(this.state, intents, dt, GAMEPLAY);
     this.activeSeconds += dt;
   }
 }
