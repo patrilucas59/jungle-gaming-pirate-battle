@@ -1,79 +1,59 @@
-import { useEffect, useRef, useState } from "react";
-import { Application, Container } from 'pixi.js';
-import { ARENA } from "../config/arena";
-import { computeViewportFit } from "../render/viewport";
+import { useEffect, useState } from "react";
+import { loadGameTextures, type GameTextures } from "../render/textures";
+import { GameCanvas } from "./GameCanvas";
 
-type MountStatus = 'loading' | 'ready' | 'error';
+type LoadState = 
+  | { phase: 'loading'; progress: number } 
+  | { phase: 'error' } 
+  | { phase: 'ready'; textures: GameTextures };
+
 
 export function GameView() {
-  const hostRef = useRef<HTMLDivElement>(null);
-  const [status, setStatus] = useState<MountStatus>('loading');
+  const [attempt, setAttempt] = useState(0);
+  const [load, setLoad] = useState<LoadState>({ phase: 'loading', progress: 0 });
 
   useEffect(() => {
-    const host = hostRef.current;
-    if (!host) return;
-
-    const app = new Application();
-    const world = new Container();
-    let initialized = false;
-    let disposed = false;
-    let resizeObserver: ResizeObserver | undefined;
-
-    const fitToHost = () => {
-      const fit = computeViewportFit(
-        host.clientWidth,
-        host.clientHeight,
-        ARENA.width,
-        ARENA.height,
-      );
-      if (fit.width < 1 || fit.height < 1) return;
-      app.renderer.resize(fit.width, fit.height, window.devicePixelRatio);
-      world.scale.set(fit.scale);
-    };
-
-    app
-      .init({
-        width: ARENA.width,
-        height: ARENA.height,
-        background: '#1b4f72',
-        antialias: true,
-        resolution: window.devicePixelRatio,
-        autoDensity: true,
-      })
-      .then(() => {
-        initialized = true;
-        if (disposed) {
-          app.destroy(true, { children: true });
-          return;
-        }
-        app.stage.addChild(world);
-        host.appendChild(app.canvas);
-        resizeObserver = new ResizeObserver(fitToHost);
-        resizeObserver.observe(host);
-        fitToHost();
-
-        setStatus('ready');
+    let cancelled = false;
+    loadGameTextures((progress) => {
+      if (!cancelled) setLoad({ phase: 'loading', progress });
+    })
+      .then((textures) => {
+        if (!cancelled) setLoad({ phase: 'ready', textures });
       })
       .catch(() => {
-        if (!disposed) setStatus('error');
+        if (!cancelled) setLoad({ phase: 'error' });
       });
+    return () => {
+      cancelled = true;
+    };
+  }, [attempt]);
 
-      return () => {
-        disposed = true;
-        resizeObserver?.disconnect();
-        if (initialized) {
-          app.destroy(true, { children: true });
-        }
-      };
-  }, []);
+  const retry = () => {
+    setLoad({ phase: 'loading', progress: 0 });
+    setAttempt((n) => n + 1);
+  }
 
   return (
     <div className="game-view">
-      {status === 'loading' && <p role="status">Loading game…</p>}
-      {status === 'error' && (
-        <p role="alert">The game could not start. Please reload the page.</p>
+      {load.phase === 'loading' && (
+        <div className="game-view__overlay">
+          <p role="status">Loading assets...</p>
+          <progress 
+            max={1}
+            value={load.progress}
+            aria-label="Asset loading progress"
+          />
+        </div>
       )}
-      <div ref={hostRef} className="game-view__stage" />
+      {load.phase === 'error' && (
+        <div className="game-view__overlay">
+          <p role="alert">Some game assets could not be loaded.</p>
+          <button type="button" onClick={retry} autoFocus>
+            Retry
+          </button>
+        </div>
+      )}
+      {load.phase === 'ready' && <GameCanvas textures={load.textures} /> }
     </div>
   );
 }
