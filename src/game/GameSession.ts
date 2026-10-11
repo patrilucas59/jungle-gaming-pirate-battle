@@ -29,10 +29,7 @@ export class GameSession {
     this.loop.advance(ticker.elapsedMS / 1000);
   };
 
-   private update(dt: number): void {
-     this.activeSeconds += dt;
-     if (Math.floor(this.activeSeconds) !== Math.floor(this.activeSeconds - dt)) {
-       console.log('active seconds', Math.floor(this.activeSeconds));
-     }
-   }
+  private update(dt: number): void {
+    this.activeSeconds += dt;
+  }
 }
