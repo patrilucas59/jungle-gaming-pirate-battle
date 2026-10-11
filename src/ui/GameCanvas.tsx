@@ -4,6 +4,7 @@ import { ARENA } from '../config/arena';
 import { GameSession } from '../game/GameSession';
 import type { GameTextures } from '../render/textures';
 import { computeViewportFit } from '../render/viewport';
+import { GAMEPLAY } from '../config/gameplay';
 
 interface GameCanvasProps {
   textures: GameTextures;
@@ -63,7 +64,7 @@ export function GameCanvas({ textures }: GameCanvasProps) {
         resizeObserver = new ResizeObserver(fitToHost);
         resizeObserver.observe(host);
         fitToHost();
-        session = new GameSession(app, world, textures);
+        session = new GameSession(app, world, textures, GAMEPLAY, Math.floor(Math.random() * 2 ** 32));
       })
       .catch(() => {
         if (!disposed) setFailed(true);

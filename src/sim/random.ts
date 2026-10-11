@@ -1,0 +1,9 @@
+import type { WorldState } from './types';
+
+export function nextRandom(world: WorldState): number {
+  world.rngState = (world.rngState + 0x6d2b79f5) | 0;
+  let mixed = world.rngState;
+  mixed = Math.imul(mixed ^ (mixed >>> 15), mixed | 1);
+  mixed ^= mixed + Math.imul(mixed ^ (mixed >>> 7), mixed | 61);
+  return ((mixed ^ (mixed >>> 14)) >>> 0) / 4294967296;
+}

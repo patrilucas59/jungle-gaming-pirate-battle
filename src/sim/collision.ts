@@ -61,3 +61,17 @@ export function circleIntersectsRect(
   const dy = y - closestY;
   return dx * dx + dy * dy < radius * radius;
 }
+
+export function circlesOverlap(
+  ax: number,
+  ay: number,
+  aRadius: number,
+  bx: number,
+  by: number,
+  bRadius: number,
+): boolean {
+  const dx = ax - bx;
+  const dy = ay - by;
+  const reach = aRadius + bRadius;
+  return dx * dx + dy * dy < reach * reach;
+}
