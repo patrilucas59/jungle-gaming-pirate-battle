@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { loadGameTextures, type GameTextures } from "../render/textures";
-import { GameCanvas } from "./GameCanvas";
+import { MatchScreen } from "./MatchScreen";
 
 type LoadState = 
   | { phase: 'loading'; progress: number } 
@@ -10,6 +10,7 @@ type LoadState =
 
 export function GameView() {
   const [attempt, setAttempt] = useState(0);
+  const [matchKey, setMatchKey] = useState(0);
   const [load, setLoad] = useState<LoadState>({ phase: 'loading', progress: 0 });
 
   useEffect(() => {
@@ -53,7 +54,13 @@ export function GameView() {
           </button>
         </div>
       )}
-      {load.phase === 'ready' && <GameCanvas textures={load.textures} /> }
+      {load.phase === 'ready' && (
+        <MatchScreen
+          key={matchKey}
+          textures={load.textures}
+          onPlayAgain={() => setMatchKey((key) => key + 1)}
+        />
+      )}
     </div>
   );
 }

@@ -1,16 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import { Application, Container, TilingSprite } from 'pixi.js';
 import { ARENA } from '../config/arena';
+import { GAMEPLAY } from '../config/gameplay';
 import { GameSession } from '../game/GameSession';
+import type { HudSnapshot } from '../game/hud';
 import type { GameTextures } from '../render/textures';
 import { computeViewportFit } from '../render/viewport';
-import { GAMEPLAY } from '../config/gameplay';
 
 interface GameCanvasProps {
   textures: GameTextures;
+  onHudChange: (hud: HudSnapshot) => void;
+  sessionRef: { current: GameSession | null };
 }
 
-export function GameCanvas({ textures }: GameCanvasProps) {
+export function GameCanvas({ textures, onHudChange, sessionRef }: GameCanvasProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const [failed, setFailed] = useState(false);
 
@@ -26,12 +29,7 @@ export function GameCanvas({ textures }: GameCanvasProps) {
     let session: GameSession | undefined;
 
     const fitToHost = () => {
-      const fit = computeViewportFit(
-        host.clientWidth,
-        host.clientHeight,
-        ARENA.width,
-        ARENA.height,
-      );
+      const fit = computeViewportFit(host.clientWidth, host.clientHeight, ARENA.width, ARENA.height);
       if (fit.width < 1 || fit.height < 1) return;
       app.renderer.resize(fit.width, fit.height, window.devicePixelRatio);
       world.scale.set(fit.scale);
@@ -53,18 +51,19 @@ export function GameCanvas({ textures }: GameCanvasProps) {
           return;
         }
         world.addChild(
-          new TilingSprite({
-            texture: textures.water,
-            width: ARENA.width,
-            height: ARENA.height,
-          }),
+          new TilingSprite({ texture: textures.water, width: ARENA.width, height: ARENA.height }),
         );
         app.stage.addChild(world);
         host.appendChild(app.canvas);
         resizeObserver = new ResizeObserver(fitToHost);
         resizeObserver.observe(host);
         fitToHost();
-        session = new GameSession(app, world, textures, GAMEPLAY, Math.floor(Math.random() * 2 ** 32));
+        session = new GameSession(app, world, textures, {
+          config: GAMEPLAY,
+          seed: Math.floor(Math.random() * 2 ** 32),
+          onHudChange,
+        });
+        sessionRef.current = session;
       })
       .catch(() => {
         if (!disposed) setFailed(true);
@@ -72,20 +71,19 @@ export function GameCanvas({ textures }: GameCanvasProps) {
 
     return () => {
       disposed = true;
+      sessionRef.current = null;
       resizeObserver?.disconnect();
       session?.destroy();
       if (initialized) {
         app.destroy(true, { children: true, texture: false, textureSource: false });
       }
     };
-  }, [textures]);
+  }, [textures, onHudChange, sessionRef]);
 
-    return (
-      <>
-        {failed && (
-          <p role="alert">The game could not start. Please reload the page.</p>
-        )}
-        <div ref={hostRef} className="game-view__stage" />
-      </>
-    );
-  }
+  return (
+    <>
+      {failed && <p role="alert">The game could not start. Please reload the page.</p>}
+      <div ref={hostRef} className="game-view__stage" />
+    </>
+  );
+}

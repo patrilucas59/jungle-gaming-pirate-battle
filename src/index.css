@@ -35,3 +35,100 @@ body,
   outline: 3px solid #f4c430;
   outline-offset: 2px;
 }
+
+.hud {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(11, 34, 54, 0.85);
+  color: #f4efe1;
+  border-radius: 8px;
+  font-family: system-ui, sans-serif;
+  pointer-events: none;
+}
+
+.hud__stats {
+  display: flex;
+  gap: 1.5rem;
+  margin: 0;
+}
+
+.hud__stats div {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.hud__stats dd {
+  margin: 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.hud__hint {
+  margin: 0;
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+
+.dialog-backdrop {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.dialog {
+  min-width: 280px;
+  padding: 1.5rem;
+  background: #0b2236;
+  color: #f4efe1;
+  border: 2px solid #f4c430;
+  border-radius: 12px;
+  font-family: system-ui, sans-serif;
+  text-align: center;
+}
+
+.dialog h2 {
+  margin-top: 0;
+}
+
+.dialog__stats,
+.controls-list {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 0.4rem 1rem;
+  text-align: left;
+}
+
+.controls-list div {
+  display: contents;
+}
+
+.dialog__stats dd,
+.controls-list dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.dialog button {
+  margin-top: 1rem;
+  padding: 0.6rem 1.4rem;
+  font-size: 1rem;
+  font-weight: 700;
+  background: #f4c430;
+  color: #0b2236;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.dialog button:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 2px;
+}
