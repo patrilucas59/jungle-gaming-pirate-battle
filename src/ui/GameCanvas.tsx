@@ -1,8 +1,9 @@
-import { useRef, useState, useEffect } from "react";
-import type { GameTextures } from "../render/textures";
-import { Application, Container, TilingSprite } from "pixi.js";
-import { computeViewportFit } from "../render/viewport";
-import { ARENA } from "../config/arena";
+import { useEffect, useRef, useState } from 'react';
+import { Application, Container, TilingSprite } from 'pixi.js';
+import { ARENA } from '../config/arena';
+import { GameSession } from '../game/GameSession';
+import type { GameTextures } from '../render/textures';
+import { computeViewportFit } from '../render/viewport';
 
 interface GameCanvasProps {
   textures: GameTextures;
@@ -21,6 +22,7 @@ export function GameCanvas({ textures }: GameCanvasProps) {
     let initialized = false;
     let disposed = false;
     let resizeObserver: ResizeObserver | undefined;
+    let session: GameSession | undefined;
 
     const fitToHost = () => {
       const fit = computeViewportFit(
@@ -61,6 +63,7 @@ export function GameCanvas({ textures }: GameCanvasProps) {
         resizeObserver = new ResizeObserver(fitToHost);
         resizeObserver.observe(host);
         fitToHost();
+        session = new GameSession(app);
       })
       .catch(() => {
         if (!disposed) setFailed(true);
@@ -69,6 +72,7 @@ export function GameCanvas({ textures }: GameCanvasProps) {
     return () => {
       disposed = true;
       resizeObserver?.disconnect();
+      session?.destroy();
       if (initialized) {
         app.destroy(true, { children: true, texture: false, textureSource: false });
       }
