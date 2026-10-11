@@ -63,7 +63,7 @@ export function GameCanvas({ textures }: GameCanvasProps) {
         resizeObserver = new ResizeObserver(fitToHost);
         resizeObserver.observe(host);
         fitToHost();
-        session = new GameSession(app);
+        session = new GameSession(app, world, textures);
       })
       .catch(() => {
         if (!disposed) setFailed(true);
