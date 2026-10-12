@@ -1,16 +1,24 @@
+import type { MatchSettings } from "../api/contracts";
 import type { LastResult } from "../storage/lastResults";
 import { ControlsList } from "./ControlsList";
 import { formatSeconds } from "./format";
 import { END_REASON_LABEL } from "./labels";
+import { LeaderboardTabs } from "./LeaderboardTabs";
+import { NetworkScenarioPanel } from "./NetworkScenarioPanel";
 
-interface MainMenusProps {
+interface MainMenuProps {
   lastResult: LastResult | null;
+  playerId: string;
+  settings: MatchSettings;
+  pendingCount: number;
   onPlay: () => void;
   onOptions: () => void;
+  onRetryPending: () => void;
+  onResetMocks: () => void;
 }
 
-export function MainMenu({ lastResult, onPlay, onOptions }: MainMenusProps) {
-  return (
+export function MainMenu({lastResult, playerId, settings, pendingCount, onPlay, onOptions, onRetryPending, onResetMocks,}: MainMenuProps) {
+   return (
     <main className="menu">
       <h1 className="menu__title">All Blue Pirate Battle</h1>
       <nav className="menu__actions" aria-label="Main menu">
@@ -21,6 +29,19 @@ export function MainMenu({ lastResult, onPlay, onOptions }: MainMenusProps) {
           Options
         </button>
       </nav>
+
+      {pendingCount > 0 && (
+        <section className="menu__panel" role="status">
+          <p>
+            {pendingCount} {pendingCount === 1 ? 'match is' : 'matches are'} waiting to be saved.
+          </p>
+          <button type="button" onClick={onRetryPending}>
+            Try again
+          </button>
+        </section>
+      )}
+
+      <LeaderboardTabs playerId={playerId} settings={settings} />
 
       <section className="menu__panel" aria-labelledby="controls-title">
         <h2 id="controls-title">Controls</h2>
@@ -40,6 +61,8 @@ export function MainMenu({ lastResult, onPlay, onOptions }: MainMenusProps) {
           </dl>
         </section>
       )}
+
+      <NetworkScenarioPanel onReset={onResetMocks} />
     </main>
   );
 }

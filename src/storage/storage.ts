@@ -15,3 +15,11 @@ export function writeJson(key: string, value: unknown): boolean {
     return false;
   }
 }
+
+export function removeKey(key: string): void {
+  try {
+    window.localStorage.removeItem(key);
+  } catch {
+    return;
+  }
+}

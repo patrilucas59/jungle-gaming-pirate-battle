@@ -245,3 +245,73 @@ body,
 .menu .button--secondary {
   background: rgba(11, 34, 54, 0.85);
 }
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.tabs [role='tab'] {
+  flex: 1;
+  background: transparent;
+  color: #f4efe1;
+  border: 2px solid #f4c430;
+}
+
+.tabs [role='tab'][aria-selected='true'] {
+  background: #f4c430;
+  color: #0b2236;
+}
+
+.tabs__caption {
+  margin: 0 0 0.5rem;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.board {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.board th,
+.board td {
+  padding: 0.35rem 0.4rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(244, 239, 225, 0.2);
+}
+
+.board__mine {
+  color: #f4c430;
+  font-weight: 700;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.menu select {
+  display: block;
+  width: 100%;
+  margin: 0.35rem 0 0.75rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 6px;
+}
+
+.menu select:focus-visible,
+.tabs [role='tab']:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 2px;
+}

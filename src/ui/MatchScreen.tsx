@@ -7,16 +7,20 @@ import { Hud } from "./Hud";
 import { PauseDialog } from "./PauseDialog";
 import { ResultDialog } from "./ResultDialog";
 import type { GameplayConfig } from "../config/gameplay";
+import type { SubmitStatus } from "../api/contracts";
 
 interface MatchScreenProps {
   textures: GameTextures;
   config: GameplayConfig;
+  registrationStatus: SubmitStatus | undefined;
+  onRetryRegistration: () => void;
   onPlayAgain: () => void;
   onMainMenu: () => void;
-  onMatchEnd: (hud: HudSnapshot) => void; 
+  onMatchEnd: (hud: HudSnapshot, config: GameplayConfig) => void;
 }
 
-export function MatchScreen({ textures, config, onPlayAgain, onMainMenu, onMatchEnd }: MatchScreenProps) {
+
+export function MatchScreen({ textures, config, registrationStatus, onRetryRegistration, onPlayAgain, onMainMenu, onMatchEnd }: MatchScreenProps) {
   const sessionRef = useRef<GameSession | null>(null);
   const reportedRef = useRef(false);
   const [hud, setHud] = useState<HudSnapshot | null>(null);
@@ -24,8 +28,8 @@ export function MatchScreen({ textures, config, onPlayAgain, onMainMenu, onMatch
   useEffect(() => {
     if (hud?.status !== 'ended' || reportedRef.current) return;
     reportedRef.current = true;
-    onMatchEnd(hud);
-  }, [hud, onMatchEnd]);
+    onMatchEnd(hud, config);
+  }, [hud, config, onMatchEnd]);
 
   return (
     <>
@@ -35,8 +39,14 @@ export function MatchScreen({ textures, config, onPlayAgain, onMainMenu, onMatch
         <PauseDialog onResume={() => sessionRef.current?.resume()} onQuit={onMainMenu} />
       )}
       {hud?.status === 'ended' && (
-        <ResultDialog hud={hud} onPlayAgain={onPlayAgain} onMainMenu={onMainMenu} />
-      )}    
+        <ResultDialog
+          hud={hud}
+          registrationStatus={registrationStatus}
+          onRetryRegistration={onRetryRegistration}
+          onPlayAgain={onPlayAgain}
+          onMainMenu={onMainMenu}
+        />
+      )}
     </>
-  )
+  );
 }
