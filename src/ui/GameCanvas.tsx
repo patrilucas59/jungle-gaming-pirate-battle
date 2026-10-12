@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Application, Container, TilingSprite } from 'pixi.js';
 import { ARENA } from '../config/arena';
-import { GAMEPLAY } from '../config/gameplay';
+import type { GameplayConfig } from '../config/gameplay';
 import { GameSession } from '../game/GameSession';
 import type { HudSnapshot } from '../game/hud';
 import type { GameTextures } from '../render/textures';
@@ -9,11 +9,12 @@ import { computeViewportFit } from '../render/viewport';
 
 interface GameCanvasProps {
   textures: GameTextures;
+  config: GameplayConfig;
   onHudChange: (hud: HudSnapshot) => void;
   sessionRef: { current: GameSession | null };
 }
 
-export function GameCanvas({ textures, onHudChange, sessionRef }: GameCanvasProps) {
+export function GameCanvas({ textures, config, onHudChange, sessionRef }: GameCanvasProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const [failed, setFailed] = useState(false);
 
@@ -59,7 +60,7 @@ export function GameCanvas({ textures, onHudChange, sessionRef }: GameCanvasProp
         resizeObserver.observe(host);
         fitToHost();
         session = new GameSession(app, world, textures, {
-          config: GAMEPLAY,
+          config,
           seed: Math.floor(Math.random() * 2 ** 32),
           onHudChange,
         });
@@ -78,7 +79,7 @@ export function GameCanvas({ textures, onHudChange, sessionRef }: GameCanvasProp
         app.destroy(true, { children: true, texture: false, textureSource: false });
       }
     };
-  }, [textures, onHudChange, sessionRef]);
+  }, [textures, config, onHudChange, sessionRef]);
 
   return (
     <>

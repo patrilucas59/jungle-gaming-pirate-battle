@@ -1,19 +1,14 @@
 import type { HudSnapshot } from "../game/hud";
-import type { MatchEndReason } from "../sim/types";
 import { formatSeconds } from "./format";
-
-
-const END_REASON_LABEL: Record<MatchEndReason, string> = {
-  time: 'Time is up',
-  destroyed: 'Your ship was destroyed',
-};
+import { END_REASON_LABEL } from "./labels";
 
 interface ResultDialogProps {
   hud: HudSnapshot;
   onPlayAgain: () => void;
-}
+  onMainMenu: () => void;
+ }
 
-export function ResultDialog({ hud, onPlayAgain }: ResultDialogProps) {
+export function ResultDialog({ hud, onPlayAgain, onMainMenu }: ResultDialogProps) {
   return (
     <div className="dialog-backdrop">
       <div className="dialog" role="dialog" aria-modal="true" aria-labelledby="result-title">
@@ -26,9 +21,14 @@ export function ResultDialog({ hud, onPlayAgain }: ResultDialogProps) {
           <dt>Reason</dt>
           <dd>{hud.endReason ? END_REASON_LABEL[hud.endReason] : ''}</dd>
         </dl>
-        <button type="button" onClick={onPlayAgain} autoFocus>
-          Play again
-        </button>
+        <div className="dialog__actions">
+          <button type="button" onClick={onPlayAgain} autoFocus>
+            Play again
+          </button>
+          <button type="button" className="button--secondary" onClick={onMainMenu}>
+            Main menu
+          </button>
+        </div>
       </div>
     </div>
   );

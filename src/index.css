@@ -132,3 +132,116 @@ body,
   outline: 3px solid #ffffff;
   outline-offset: 2px;
 }
+
+.menu {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 2rem 1rem;
+  background: #0b2236 url('/assets/ui_scene_background.png') center / cover no-repeat;
+  color: #f4efe1;
+  font-family: system-ui, sans-serif;
+}
+
+.menu__title {
+  margin: 0;
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  text-align: center;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+}
+
+.menu__actions,
+.options__actions,
+.dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.menu__panel,
+.options {
+  width: min(420px, 92vw);
+  padding: 1rem 1.5rem;
+  background: rgba(11, 34, 54, 0.92);
+  border: 2px solid #f4c430;
+  border-radius: 12px;
+}
+
+.menu__panel h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+}
+
+.menu button,
+.options button {
+  padding: 0.7rem 1.6rem;
+  font-size: 1rem;
+  font-weight: 700;
+  background: #f4c430;
+  color: #0b2236;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.menu .button--secondary,
+.options .button--secondary,
+.dialog .button--secondary {
+  background: transparent;
+  color: #f4efe1;
+  border: 2px solid #f4c430;
+}
+
+.menu button:focus-visible,
+.options button:focus-visible,
+.options input:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.options label {
+  font-weight: 700;
+}
+
+.options input {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 2px solid #f4efe1;
+  border-radius: 6px;
+}
+
+.options input[aria-invalid='true'] {
+  border-color: #ff6b5a;
+}
+
+.field__hint {
+  margin: 0 0 0.5rem;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.field__error {
+  margin: 0 0 0.5rem;
+  color: #ffb4a8;
+  font-weight: 700;
+}
+
+.field__status {
+  min-height: 1.4em;
+  margin: 0.25rem 0;
+}
+
+.menu .button--secondary {
+  background: rgba(11, 34, 54, 0.85);
+}
