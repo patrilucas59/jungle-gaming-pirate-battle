@@ -12,7 +12,6 @@ dist
 dist-ssr
 *.local
 test-results/
-playwright-report/
 blob-report/
 .vercel
 
