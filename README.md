@@ -104,7 +104,7 @@ The HTML report is in `playwright-report/`; traces are kept for failed tests. Te
 
 ## Use of AI
 
-I used Claude (Anthropic) as a coding assistant due to the short deadline. Most of the code, including the game systems, was written by Claude at my request. I made the design and architecture decisions, tested every feature, debugged the issues found and reviewed all the code, and I can explain each part. `ARCHITECTURE.md` documents the design.
+I used Claude (Anthropic) as a coding assistant due to the short deadline. I made the design and architecture decisions, tested every feature, debugged the issues found and reviewed all the code, and I can explain each part. `ARCHITECTURE.md` documents the design.
 
 ## Assets
 
