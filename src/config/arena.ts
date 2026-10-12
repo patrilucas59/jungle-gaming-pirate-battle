@@ -16,4 +16,4 @@ export const ISLANDS: readonly Rect[] = [
   { x: 256, y: 192, width: 192, height: 192 },
 ];
 
-export const ISLAND_COLLECTION_INSET = 0;
+export const ISLAND_COLLISION_INSET = 0;
